@@ -31,7 +31,7 @@ lsi = TruncatedSVD(n_components = components)
 X = lsi.fit_transform(X)
 
 
-cv = 0
+cv = 1
 ######################################################################
 ########################SVM with Parameter Choosing###################
 ######################################################################
@@ -45,11 +45,14 @@ if(cv==0):
 	X_test = X[T:]
 	y_test = y[T:]
 
-	svc = svm.SVC()
-	param_grid = {'kernel': ('linear', 'rbf'), 'C': [1, 10, 100, 1000, 10000], 'gamma': [0.001, 0.01, 0.1, 1, 10]}
-	clf = GridSearchCV(svc, param_grid)
+#Here we used GridSearchCV to find the best parameters for SVM
+	#svc = svm.SVC()
+	#param_grid = {'kernel': ('linear', 'rbf'), 'C': [1, 10, 100, 1000, 10000], 'gamma': [0.001, 0.01, 0.1, 1, 10]}
+	#clf = GridSearchCV(svc, param_grid)
+	clf = svm.SVC(kernel='rbf', C=10000, gamma=0.01)
 	clf.fit(X_train,y_train)
-	print CV_rfc.best_params_
+	#print clf.best_params_
+	#{'kernel': 'rbf', 'C': 10000, 'gamma': 0.01}
 
 	predictions = clf.predict(X_test)
 	precision_score =  metrics.precision_score(y_test, predictions, average='micro')
@@ -68,9 +71,7 @@ else:
 		X_train, X_test = X[train], X[test]
 	   	y_train, y_test = y[train], y[test]
 		
-		svc = svm.SVC()
-		param_grid = {'kernel': ('linear', 'rbf'), 'C': [1, 10, 100, 1000, 10000], 'gamma': [0.001, 0.01, 0.1, 1, 10]}
-		clf = GridSearchCV(svc, param_grid)
+		clf = svm.SVC(kernel='rbf', C=10000, gamma=0.01)
 		clf.fit(X_train,y_train)
 
 		predictions = clf.predict(X_test)

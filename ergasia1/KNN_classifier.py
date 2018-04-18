@@ -49,7 +49,7 @@ recall_score = 0
 f1_score =0
 accuracy_score = 0
 
-k = 21 #Use multiple of 7 for nearest neighbors
+k = 7 #Use multiple of 7 for nearest neighbors
 cv = 0
 if (cv == 0):
 	N = len(X)
