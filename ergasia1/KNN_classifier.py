@@ -36,10 +36,10 @@ y = le.transform(train_data["Category"])
 
 #Vectorization
 vectorizer = CountVectorizer(stop_words = ENGLISH_STOP_WORDS)
-X = vectorizer.fit_transform(train_data['Content']).toarray()
+X = vectorizer.fit_transform(train_data['Title'],train_data['Content']).toarray()
 
 #Latent Semantic Indexing
-components = 50
+components = 100
 lsi = TruncatedSVD(n_components = components)
 X = lsi.fit_transform(X)
 
@@ -52,7 +52,7 @@ accuracy_score = 0
 k = 21 #Use multiple of 7 for nearest neighbors
 cv = 0
 if (cv == 0):
-	N = 100
+	N = len(X)
 	T = int(N*0.66)
 	
 	X_train = X[:T]
@@ -71,7 +71,7 @@ if (cv == 0):
 		
 		neighbors = []
 		for j in range(k):
-			neighbors.append(y_train[distances[i][1]])
+			neighbors.append(y_train[distances[j][1]])
 		
 		nearest_neighbor = Counter(neighbors).most_common(1)[0][0]
 

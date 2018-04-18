@@ -2,6 +2,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import KFold
+from sklearn.naive_bayes import MultinomialNB
 from sklearn.model_selection import GridSearchCV
 from sklearn import preprocessing
 from sklearn import metrics
@@ -13,9 +14,13 @@ import time
 
 train_data = pd.read_csv('datasets/train_set.csv', sep="\t")
 
+vectorizer = CountVectorizer(stop_words = ENGLISH_STOP_WORDS)
+X = vectorizer.fit_transform(train_data['Title'],train_data['Content']).toarray()
+
 le = preprocessing.LabelEncoder()
 le.fit(train_data["Category"])
 y = le.transform(train_data["Category"])
+
 
 #NO VECTORIZATION FOR NAIVE BAYES, IT CANT HANDLE NEGATIVE NUMBERS
 

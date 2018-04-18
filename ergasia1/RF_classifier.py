@@ -28,7 +28,7 @@ vectorizer = CountVectorizer(stop_words = ENGLISH_STOP_WORDS)
 X = vectorizer.fit_transform(train_data['Title'],train_data['Content']).toarray()
 
 #Latent Semantic Indexing
-components = 50
+components = 100
 lsi = TruncatedSVD(n_components = components)
 X = lsi.fit_transform(X)
 

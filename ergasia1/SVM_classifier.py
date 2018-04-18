@@ -23,10 +23,10 @@ y = le.transform(train_data["Category"])
 
 #Vectorization
 vectorizer = CountVectorizer(stop_words = ENGLISH_STOP_WORDS)
-X = vectorizer.fit_transform(train_data['Content']).toarray()
+X = vectorizer.fit_transform(train_data['Title'],train_data['Content']).toarray()
 
 #Latent Semantic Indexing
-components = 50
+components = 100
 lsi = TruncatedSVD(n_components = components)
 X = lsi.fit_transform(X)
 
@@ -46,9 +46,10 @@ if(cv==0):
 	y_test = y[T:]
 
 	svc = svm.SVC()
-	param_grid = {'kernel': ('linear', 'rbf'), 'C': [1, 10], 'gamma': [1,10]}
+	param_grid = {'kernel': ('linear', 'rbf'), 'C': [1, 10, 100, 1000, 10000], 'gamma': [0.001, 0.01, 0.1, 1, 10]}
 	clf = GridSearchCV(svc, param_grid)
 	clf.fit(X_train,y_train)
+	print CV_rfc.best_params_
 
 	predictions = clf.predict(X_test)
 	precision_score =  metrics.precision_score(y_test, predictions, average='micro')
@@ -68,7 +69,7 @@ else:
 	   	y_train, y_test = y[train], y[test]
 		
 		svc = svm.SVC()
-		param_grid = {'kernel': ('linear', 'rbf'), 'C': [1, 10], 'gamma': [1,10]}
+		param_grid = {'kernel': ('linear', 'rbf'), 'C': [1, 10, 100, 1000, 10000], 'gamma': [0.001, 0.01, 0.1, 1, 10]}
 		clf = GridSearchCV(svc, param_grid)
 		clf.fit(X_train,y_train)
 
