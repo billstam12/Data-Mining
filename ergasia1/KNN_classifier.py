@@ -77,7 +77,36 @@ if (cv == 0):
 
 		predictions.append(nearest_neighbor)
 	accuracy_score = metrics.accuracy_score(y_test, predictions)
-	print('Accuracy: ' + repr(accuracy_score) + '%')
+	precision_score =  metrics.precision_score(y_test, predictions, average='macro')
+	recall_score =  metrics.recall_score(y_test, predictions, average='macro')
+	f1_score =  metrics.f1_score(y_test, predictions, average='macro')
+else:
+	print("Performing Cross Validation")
 
+	for train, test in tqdm(kf.split(X)):
+		X_train, X_test = X[train], X[test]
+	   	y_train, y_test = y[train], y[test]
+
+	predictions = []
+	for i in range(len(X_test)):
+		#Get Nearest Neighbors
+		distances =[]
+		for j in range(len(X_train)):
+			dist = np.sqrt(np.sum(np.square(X_test[i,:] - X_train[j, :])))
+			distances.append([dist, j])
+		distances = sorted(distances)
+		
+		neighbors = []
+		for j in range(k):
+			neighbors.append(y_train[distances[j][1]])
+		
+		nearest_neighbor = Counter(neighbors).most_common(1)[0][0]
+
+		predictions.append(nearest_neighbor)
+	accuracy_score += metrics.accuracy_score(y_test, predictions)
+	precision_score +=  metrics.precision_score(y_test, predictions, average='macro')
+	recall_score +=  metrics.recall_score(y_test, predictions, average='macro')
+	f1_score +=  metrics.f1_score(y_test, predictions, average='macro')
 	
-
+print "Printing K-Nearest Neighbors statistics"
+print precision_score, recall_score, f1_score, accuracy_score

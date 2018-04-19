@@ -8,6 +8,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import TruncatedSVD
 from sklearn.neural_network import MLPClassifier
 from sklearn import preprocessing
+from sklearn.pipeline import Pipeline
 from tqdm import tqdm
 import numpy as np
 import pandas as pd
@@ -43,10 +44,11 @@ if (cv ==0):
 	X_train = scaler.transform(X_train)
 	X_test = scaler.transform(X_test)
 
-	clf = MLPClassifier(activation = 'relu', solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(6, N/2),learning_rate ="constant", learning_rate_init = 0.009,momentum = 0.009, random_state=1)
+	clf = MLPClassifier(activation = 'relu', solver='sgd', warm_start=True, alpha=1e-5, max_iter = 1000, hidden_layer_sizes=(1, N/2),learning_rate ="constant", learning_rate_init = 0.01, momentum = 0.01, random_state=1)
 
 	clf.fit(X_train,y_train)
 	predictions = clf.predict(X_test)
+	accuracy_score = metrics.accuracy_score(y_test, predictions)
 
 else:
 	print("Performing Cross Validation")

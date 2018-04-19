@@ -55,9 +55,9 @@ if(cv==0):
 	#{'kernel': 'rbf', 'C': 10000, 'gamma': 0.01}
 
 	predictions = clf.predict(X_test)
-	precision_score =  metrics.precision_score(y_test, predictions, average='micro')
-	recall_score =  metrics.recall_score(y_test, predictions, average='micro')
-	f1_score =  metrics.f1_score(y_test, predictions, average='micro')
+	precision_score =  metrics.precision_score(y_test, predictions, average='macro')
+	recall_score =  metrics.recall_score(y_test, predictions, average='macro')
+	f1_score =  metrics.f1_score(y_test, predictions, average='macro')
 	accuracy_score = metrics.accuracy_score(y_test, predictions)
 else:
 	#Cross Validation
@@ -75,9 +75,9 @@ else:
 		clf.fit(X_train,y_train)
 
 		predictions = clf.predict(X_test)
-		precision_score +=  metrics.precision_score(y_test, predictions, average='micro')
-		recall_score +=  metrics.recall_score(y_test, predictions, average='micro')
-		f1_score +=  metrics.f1_score(y_test, predictions, average='micro')
+		precision_score +=  metrics.precision_score(y_test, predictions, average='macro')
+		recall_score +=  metrics.recall_score(y_test, predictions, average='macro')
+		f1_score +=  metrics.f1_score(y_test, predictions, average='macro')
 		accuracy_score += metrics.accuracy_score(y_test, predictions)
 		
 	accuracy_score /= 10

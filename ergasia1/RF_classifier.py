@@ -46,9 +46,9 @@ if (cv == 0):
 	clf.fit(X_train,y_train)
 
 	predictions = clf.predict(X_test)
-	precision_score =  metrics.precision_score(y_test, predictions, average='micro')
-	recall_score =  metrics.recall_score(y_test, predictions, average='micro')
-	f1_score =  metrics.f1_score(y_test, predictions, average='micro')
+	precision_score =  metrics.precision_score(y_test, predictions, average='macro')
+	recall_score =  metrics.recall_score(y_test, predictions, average='macro')
+	f1_score =  metrics.f1_score(y_test, predictions, average='macro')
 	accuracy_score = metrics.accuracy_score(y_test, predictions)
 else:	
 	######################################################################
@@ -69,9 +69,9 @@ else:
 
 		predictions = clf.predict(X_test)
 		print "Printing stats"
-		precision_score +=  metrics.precision_score(y_test, predictions, average='micro')
-		recall_score +=  metrics.recall_score(y_test, predictions, average='micro')
-		f1_score +=  metrics.f1_score(y_test, predictions, average='micro')
+		precision_score +=  metrics.precision_score(y_test, predictions, average='macro')
+		recall_score +=  metrics.recall_score(y_test, predictions, average='macro')
+		f1_score +=  metrics.f1_score(y_test, predictions, average='macro')
 		accuracy_score += metrics.accuracy_score(y_test, predictions)
 		
 	accuracy_score /= 10
@@ -82,6 +82,11 @@ else:
 print "Printing Random Forest statistics"
 print precision_score, recall_score, f1_score, accuracy_score
 
+d = {'Statistics': pd.Series(["Accuracy", "Precision", "Recall", "F-Measure"]),
+	'Random Forest':pd.Series([accuracy_score,precision_score,recall_score,f1_score])}
 
+df = pd.DataFrame(d)
+df.to_csv('results/EvaluationMetric_10fold.csv', sep='\t', index=False,
+    columns=['Statistics', 'Naive Bayes', 'Random Forest', 'SVM', 'KNN', 'Stochastic Gradient Descent'])
 
 

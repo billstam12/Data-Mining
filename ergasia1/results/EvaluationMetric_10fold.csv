@@ -1,0 +1,5 @@
+Statistics	Naive Bayes	Random Forest	SVM	KNN	Stochastic Gradient Descent
+Accuracy		0.7959721889235195			
+Precision		0.789114229407203			
+Recall		0.7738334247773351			
+F-Measure		0.7784560789110604			

@@ -10,7 +10,10 @@ from tqdm import tqdm
 from sklearn.decomposition import TruncatedSVD
 import pandas as pd
 import numpy as np
+import csv
 import time
+
+
 
 train_data = pd.read_csv('datasets/train_set.csv', sep="\t")
 
@@ -41,9 +44,9 @@ if(cv==0):
 
 	predictions = clf.predict(X_test)
 	
-	precision_score =  metrics.precision_score(y_test, predictions, average='micro')
-	recall_score =  metrics.recall_score(y_test, predictions, average='micro')
-	f1_score =  metrics.f1_score(y_test, predictions, average='micro')
+	precision_score =  metrics.precision_score(y_test, predictions, average='macro')
+	recall_score =  metrics.recall_score(y_test, predictions, average='macro')
+	f1_score =  metrics.f1_score(y_test, predictions, average='macro')
 	accuracy_score = metrics.accuracy_score(y_test, predictions)
 else:
 	kf = KFold(n_splits = 10)
@@ -62,9 +65,9 @@ else:
 
 		predictions = clf.predict(X_test)
 		print "Printing stats"
-		precision_score +=  metrics.precision_score(y_test, predictions, average='micro')
-		recall_score +=  metrics.recall_score(y_test, predictions, average='micro')
-		f1_score +=  metrics.f1_score(y_test, predictions, average='micro')
+		precision_score +=  metrics.precision_score(y_test, predictions, average='macro')
+		recall_score +=  metrics.recall_score(y_test, predictions, average='macro')
+		f1_score +=  metrics.f1_score(y_test, predictions, average='macro')
 		accuracy_score += metrics.accuracy_score(y_test, predictions)
 		
 
@@ -76,6 +79,10 @@ else:
 print "Printing Naive Bayes statistics"
 print precision_score, recall_score, f1_score, accuracy_score
 
+d = {'Statistics': pd.Series(["Accuracy", "Precision", "Recall", "F-Measure"]),
+	'Naive Bayes':pd.Series([accuracy_score,precision_score,recall_score,f1_score])}
 
-
+df = pd.DataFrame(d)
+df.to_csv('results/EvaluationMetric_10fold.csv', sep='\t', index=False,
+    columns=['Statistics', 'Naive Bayes', 'Random Forest', 'SVM', 'KNN', 'Stochastic Gradient Descent'])
 
