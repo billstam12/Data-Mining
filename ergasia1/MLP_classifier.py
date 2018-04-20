@@ -43,7 +43,7 @@ if (cv == 0):
 	X_train = scaler.transform(X_train)
 	X_test = scaler.transform(X_test)
 
-	clf = MLPClassifier(activation = 'relu', solver='sgd', warm_start=True, alpha=1e-5, max_iter = 1000, hidden_layer_sizes=(N/2,N/2,N/4,N/4,N/8,N/8),learning_rate ="adaptive", learning_rate_init = 0.01, momentum = 0.01, random_state=1)
+	clf = MLPClassifier(activation = 'relu', solver='sgd', warm_start=True, alpha=1e-5, max_iter = 1000, hidden_layer_sizes=(N/2,N/4,N/8),learning_rate ="adaptive", learning_rate_init = 0.01, momentum = 0.01, random_state=1)
 	clf.fit(X_train,y_train)
 	predictions = clf.predict(X_test)
 	accuracy_score = metrics.accuracy_score(y_test, predictions)

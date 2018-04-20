@@ -26,8 +26,9 @@ def EvaluateMetricCSV(accuracy, precision, recall, f1):
 
 
 train_data = pd.read_csv('datasets/train_set.csv', sep="\t")
-
-vectorizer = CountVectorizer(stop_words = ENGLISH_STOP_WORDS)
+text_file = open("stopwords", "r")
+stp = text_file.read().splitlines()
+vectorizer = CountVectorizer(stop_words = ENGLISH_STOP_WORDS.union(stp))
 X = vectorizer.fit_transform(train_data['Title'],train_data['Content']).toarray()
 
 le = preprocessing.LabelEncoder()
