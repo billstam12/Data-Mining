@@ -1,7 +1,5 @@
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import KFold
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.model_selection import GridSearchCV
 from sklearn import metrics
 from tqdm import tqdm
 from sklearn.decomposition import TruncatedSVD

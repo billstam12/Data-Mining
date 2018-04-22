@@ -14,7 +14,7 @@ import time
 def naive_bayes(X,y,cv):
 
 	if(cv==0):
-		N = len(X)
+		N = 2000
 		T = int(N*0.66)
 		X_train = X[:T]
 		y_train = y[:T]

@@ -1,6 +1,5 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
-from sklearn.feature_extraction.text import CountVectorizer
 from sklearn import preprocessing
 import os 
 from sklearn import metrics
@@ -28,8 +27,8 @@ def EvaluateMetricCSV(accuracy, precision, recall, f1):
 train_data = pd.read_csv('datasets/train_set.csv', sep="\t")
 text_file = open("stopwords", "r")
 stp = text_file.read().splitlines()
-vectorizer = CountVectorizer(stop_words = ENGLISH_STOP_WORDS.union(stp))
-X = vectorizer.fit_transform(train_data['Title'],train_data['Content']).toarray()
+vctrzr = TfidfVectorizer(stop_words = ENGLISH_STOP_WORDS.union(stp))
+X = vctrzr.fit_transform(train_data['Content'] + 3*train_data['Title'])
 
 le = preprocessing.LabelEncoder()
 le.fit(train_data["Category"])
@@ -62,7 +61,6 @@ accuracy_list.append(accuracy)
 precision_list.append(precision)
 recall_list.append(recall)
 f1_list.append(f1)
-
 
 ######################################################################
 ########################SVM with Parameter Choosing###################
