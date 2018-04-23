@@ -7,13 +7,15 @@ from sklearn import metrics
 from sklearn.preprocessing import StandardScaler  
 from sklearn.decomposition import TruncatedSVD
 from sklearn.neural_network import MLPClassifier
+from sklearn.preprocessing import PolynomialFeatures
 from sklearn import preprocessing
 from tqdm import tqdm
 import numpy as np
 import pandas as pd
 import time
 
-components = 100
+
+components = 40
 
 train_data = pd.read_csv('datasets/train_set.csv', sep="\t")
 test_data = pd.read_csv('datasets/test_set.csv', sep ="\t")
@@ -21,7 +23,7 @@ cross_val = 1
 text_file = open("stopwords", "r")
 stp = text_file.read().splitlines()
 vctrzr = TfidfVectorizer(stop_words = ENGLISH_STOP_WORDS.union(stp))
-X = vctrzr.fit_transform(train_data['Content'])
+X = vctrzr.fit_transform(train_data['Content'] + train_data['Title'])
 
 le = preprocessing.LabelEncoder()
 le.fit(train_data["Category"])
@@ -32,13 +34,13 @@ X = lsi.fit_transform(X)
 N = len(X)
 T = int(N*0.66)
 
-X_test = vctrzr.fit_transform(test_data['Content'])
+X_test = vctrzr.fit_transform(test_data['Content'] + test_data['Title'])
 X_test = lsi.fit_transform(X_test)
 	
 scaler =  StandardScaler()
 scaler.fit(X)
 scaler.fit(X_test)
-	
+
 if (cross_val == 0):
 	
 	X_train = X[:T]
@@ -59,7 +61,7 @@ if (cross_val == 0):
 else:	
 	print("Performing Cross Validation")
 	
-	clf = MLPClassifier(hidden_layer_sizes=(25), max_iter=500, alpha=0.0001, solver='sgd', verbose=10,  random_state=21,tol=0.000000001)
+	clf = MLPClassifier(hidden_layer_sizes=(25,25,25), warm_start=True, max_iter=500, alpha=0.0001, activation="tanh",solver='sgd', verbose=10,learning_rate_init=0.01,learning_rate="adaptive", random_state=21,tol=0.000000001)
 	clf.fit(X,y)
 	#scores = cross_val_score(clf, X, y, cv = 10)
 	#print("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))	

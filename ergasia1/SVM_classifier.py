@@ -13,7 +13,7 @@ from sklearn import svm
 
 def support_vector_machine(X,y,cv):
 	#Latent Semantic Indexing
-	components = 100
+	components = 40
 	lsi = TruncatedSVD(n_components = components)
 	X = lsi.fit_transform(X)
 

@@ -10,7 +10,6 @@ import csv
 import time
 
 
-
 def naive_bayes(X,y,cv):
 
 	if(cv==0):

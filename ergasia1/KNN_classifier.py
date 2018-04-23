@@ -25,7 +25,7 @@ def majority_vote(neighbors):
 def k_nearest_neighbors(X,y,cv,k):
 
 	#Latent Semantic Indexing
-	components = 100
+	components = 40
 	lsi = TruncatedSVD(n_components = components)
 	X = lsi.fit_transform(X)
 

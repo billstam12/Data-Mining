@@ -13,7 +13,7 @@ import time
 def random_forest(X,y,cv):
 
 	#Latent Semantic Indexing
-	components = 100
+	components = 40
 	lsi = TruncatedSVD(n_components = components)
 	X = lsi.fit_transform(X)
 
