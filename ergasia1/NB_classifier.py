@@ -36,16 +36,13 @@ def naive_bayes(X,y,cv):
 		f1_score =0
 		accuracy_score = 0
 		for train, test in tqdm(kf.split(X)):
-			X_train = np.array(X)[train]
-			y_train = np.array(y)[train]
-			X_test = np.array(X)[test]
-			y_test = np.array(y)[test]
+			X_train, X_test = X[train], X[test]
+		   	y_train, y_test = y[train], y[test]
 			
 			clf = MultinomialNB()
 			clf.fit(X_train,y_train)
 
 			predictions = clf.predict(X_test)
-			print "Printing stats"
 			precision_score +=  metrics.precision_score(y_test, predictions, average='macro')
 			recall_score +=  metrics.recall_score(y_test, predictions, average='macro')
 			f1_score +=  metrics.f1_score(y_test, predictions, average='macro')

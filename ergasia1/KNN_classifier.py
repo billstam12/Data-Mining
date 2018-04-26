@@ -9,18 +9,6 @@ import numpy as np
 import time
 import operator
 
-def majority_vote(neighbors):
-	map = {}
-	maximum = ( '', 0 ) # (element, occurences)
-	
-	for n in range(len(neighbors)):
-		if n in map: 
-			map[n] += 1
-		else:
-			map[n] = 1
-		if map[n] > maximum[1]:
-			maximum = (n, map[n])
-	return maximum
 	
 def k_nearest_neighbors(X,y,cv,k):
 
@@ -35,7 +23,6 @@ def k_nearest_neighbors(X,y,cv,k):
 	f1_score =0
 	accuracy_score = 0
 
-	cv = 0
 	if (cv == 0):
 		N = len(X)
 		T = int(N*0.66)
@@ -66,33 +53,36 @@ def k_nearest_neighbors(X,y,cv,k):
 		recall_score =  metrics.recall_score(y_test, predictions, average='macro')
 		f1_score =  metrics.f1_score(y_test, predictions, average='macro')
 	else:
-		print("Performing Cross Validation")
 
 		for train, test in tqdm(kf.split(X)):
 			X_train, X_test = X[train], X[test]
 		   	y_train, y_test = y[train], y[test]
 
-		predictions = []
-		for i in range(len(X_test)):
-			#Get Nearest Neighbors
-			distances =[]
-			for j in range(len(X_train)):
-				dist = np.sqrt(np.sum(np.square(X_test[i,:] - X_train[j, :])))
-				distances.append([dist, j])
-			distances = sorted(distances)
-			
-			neighbors = []
-			for j in range(k):
-				neighbors.append(y_train[distances[j][1]])
-			
-			nearest_neighbor = Counter(neighbors).most_common(1)[0][0]
+			predictions = []
+			for i in range(len(X_test)):
+				#Get Nearest Neighbors
+				distances =[]
+				for j in range(len(X_train)):
+					dist = np.sqrt(np.sum(np.square(X_test[i,:] - X_train[j, :])))
+					distances.append([dist, j])
+				distances = sorted(distances)
+				
+				neighbors = []
+				for j in range(k):
+					neighbors.append(y_train[distances[j][1]])
+				
+				nearest_neighbor = Counter(neighbors).most_common(1)[0][0]
 
-			predictions.append(nearest_neighbor)
-		accuracy_score += metrics.accuracy_score(y_test, predictions)
-		precision_score +=  metrics.precision_score(y_test, predictions, average='macro')
-		recall_score +=  metrics.recall_score(y_test, predictions, average='macro')
-		f1_score +=  metrics.f1_score(y_test, predictions, average='macro')
+				predictions.append(nearest_neighbor)
+			accuracy_score += metrics.accuracy_score(y_test, predictions)
+			precision_score +=  metrics.precision_score(y_test, predictions, average='macro')
+			recall_score +=  metrics.recall_score(y_test, predictions, average='macro')
+			f1_score +=  metrics.f1_score(y_test, predictions, average='macro')
 		
+		accuracy_score /= 10
+		f1_score /= 10
+		recall_score /= 10
+		precision_score /= 10
 	return accuracy_score, precision_score, recall_score, f1_score
 
 
