@@ -2,7 +2,9 @@ import pandas as pd
 import numpy as np
 
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
-from wordcloud import WordCloud, STOPWORDS
+from wordcloud import WordCloud
+
+
 
 def create_WordCloud(text, stopwords, filename):
 	wc = WordCloud(background_color="white",max_words=400,stopwords=stopwords,width=800,height=400)
@@ -10,7 +12,6 @@ def create_WordCloud(text, stopwords, filename):
 	wc.to_file("WordClouds/"+filename+".png")
 
 train_data = pd.read_csv('datasets/train_set.csv',sep="\t")
-train_data = train_data[0:25]
 
 
 A = np.array(train_data)
@@ -38,12 +39,12 @@ for i in range(0,A.shape[0]):
 	elif A[i][4] == "Business":
 		text_b += " " + A[i][3]
 
-additional_stopwords = STOPWORDS.union(
-        ['said', 'having', 'say', 'says', 'year', 'day', 'did', 'just', 'good', 'come', 'make', 'going', 'like'])
-stopwords = ENGLISH_STOP_WORDS.union(additional_stopwords)
+text_file = open("stopwords", "r")
+stp = text_file.read().splitlines()
+stopwords = ENGLISH_STOP_WORDS.union(stp)
 
-create_WordCloud(text_p, STOPWORDS, "Politics")
-create_WordCloud(text_f, STOPWORDS, "Film")
-create_WordCloud(text_ft, STOPWORDS, "Football")
-create_WordCloud(text_t, STOPWORDS, "Technology")
-create_WordCloud(text_b, STOPWORDS, "Business")
+create_WordCloud(text_p, stopwords, "Politics")
+create_WordCloud(text_f, stopwords, "Film")
+create_WordCloud(text_ft, stopwords, "Football")
+create_WordCloud(text_t, stopwords, "Technology")
+create_WordCloud(text_b, stopwords, "Business")
