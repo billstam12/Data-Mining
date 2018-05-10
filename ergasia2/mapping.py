@@ -2,33 +2,64 @@ import pandas as pd
 from ast import literal_eval
 import gmplot
 
-train_set = pd.read_csv('train_set.csv', 
+train_set = pd.read_csv('datasets/train_set.csv', 
 						converters = {"Trajectory": literal_eval},
 						index_col='tripId')
 jpid = ['00160001', '00161001', '083A1001', '015B1001', '077A0001'] #5 patternIds
 traj = train_set['Trajectory'].loc[train_set['journeyPatternId'].isin(jpid)].head(5)
-print traj
+
+traj_list = traj.values
 
 
+lats_1 = []
+lats_2 = []
+lats_3 = []
+lats_4 = []
+lats_5 = []
 
-"""
-gmap = gmplot.GoogleMapPlotter("Dublin")
+lons_1 = []
+lons_2 = []
+lons_3 = []
+lons_4 = []
+lons_5 = []
 
 # Polygon
-golden_gate_park_lats, golden_gate_park_lons = zip(*[
-    (37.771269, -122.511015),
-    (37.773495, -122.464830),
-    (37.774797, -122.454538),
-    (37.771988, -122.454018),
-    (37.773646, -122.440979),
-    (37.772742, -122.440797),
-    (37.771096, -122.453889),
-    (37.768669, -122.453518),
-    (37.766227, -122.460213),
-    (37.764028, -122.510347),
-    (37.771269, -122.511015)
-    ])
-gmap.plot(golden_gate_park_lats, golden_gate_park_lons, 'cornflowerblue', edge_width=10)
+for i in range(0,5):
+	for j in traj_list[i]:
+		if(i == 0):
+			lats_1.append(j[2])
+			lons_1.append(j[1])
+		elif(i == 1):
+			lats_2.append(j[2])
+			lons_2.append(j[1])
+		elif(i == 2):
+			lats_3.append(j[2])
+			lons_3.append(j[1])
+		elif(i == 3):
+			lats_4.append(j[2])
+			lons_4.append(j[1])
+		elif(i == 4):
+			lats_5.append(j[2])
+			lons_5.append(j[1])
 
-gmap.draw("map.html")
-"""
+			
+gmap1 = gmplot.GoogleMapPlotter(-6.2, 53.3, 13)			
+gmap1.plot(lats_1,lons_1,'cornflowerblue',edge_width=10)
+gmap1.draw("maps/map1.html")
+
+gmap2 = gmplot.GoogleMapPlotter(-6.2, 53.3, 13)			
+gmap2.plot(lats_2,lons_2,'cornflowerblue',edge_width=10)
+gmap2.draw("maps/map2.html")
+
+gmap3 = gmplot.GoogleMapPlotter(-6.2, 53.3, 13)			
+gmap3.plot(lats_3,lons_3,'cornflowerblue',edge_width=10)
+gmap3.draw("maps/map3.html")
+
+gmap4 = gmplot.GoogleMapPlotter(-6.2, 53.3, 13)		
+gmap4.plot(lats_4,lons_4,'cornflowerblue',edge_width=10)
+gmap4.draw("maps/map4.html")
+
+gmap5 =  gmplot.GoogleMapPlotter(-6.2, 53.3, 13)		
+gmap5.plot(lats_5,lons_5,'cornflowerblue',edge_width=10)
+gmap5.draw("maps/map5.html")
+
