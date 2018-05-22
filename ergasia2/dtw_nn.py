@@ -71,13 +71,13 @@ for traj in test_traj:
 		lats.append(item[2])
 	
 	# PLOT THE TEST ROUTE
-	gmap = gmplot.GoogleMapPlotter(53.383015, -6.237581, 12)
+	gmap = gmplot.GoogleMapPlotter(lats[int(len(lats)/2)], lons[int(len(lons)/2)], 11)
 	gmap.plot(lats, lons, 'cornflowerblue', edge_width=5)
-	gmap.draw("results2/Test_Route_"+str(index)+".html")
+	gmap.draw("results2_1/Test_Route_"+str(index)+".html")
 	
 	#Calculate dtw and create distances list
 	start_time = time.time()
-	for j in train_traj[:1000]:
+	for j in train_traj[:100]:
 		distances.append([DTW(traj,j),num])
 		num +=1	#This counts the position of the neighbor
 	distances = sorted(distances)
@@ -94,11 +94,11 @@ for traj in test_traj:
 			lons.append(l[1])
 			lats.append(l[2])
 			
-		gmap = gmplot.GoogleMapPlotter(53.383015, -6.237581, 12)
+		gmap = gmplot.GoogleMapPlotter(lats[int(len(lats)/2)], lons[int(len(lons)/2)], 11)
 		gmap.plot(lats, lons, 'cornflowerblue', edge_width=5)
-		gmap.draw("results2/Neighbor_"+str(index)+str(distances[k][1])+".html")
+		gmap.draw("results2_1/Neighbor_"+str(index)+str(distances[k][1])+".html")
 
-	fl = open('results2/final/final_'+str(index)+'.html','w')
+	fl = open('results2_1/final/final_'+str(index)+'.html','w')
 	message = """
 <!DOCTYPE html>
 <html>
