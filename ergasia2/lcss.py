@@ -49,7 +49,7 @@ def lcs(search , target):
 			else:
 				L[i][j] = max(L[i-1][j] , L[i][j-1])
 	cp = common_path(L,target)
-	ls = [L[m][n], cp]
+	ls = [max(max(L)), cp]
 	return ls
 	
 def common_path(L,target):
@@ -96,15 +96,14 @@ for traj in test_traj:
 	gmap.plot(lats, lons, 'cornflowerblue', edge_width=5)
 	gmap.draw("results2_2/Test_Route_"+str(index)+".html")
 	
-	#Calculate dtw and create matching list
+	#Calculate lcss and create matching list
 	start_time = time.time()
-	for j in train_traj[:5000]:
-		mt = lcs(traj,j)
+	for j in train_traj[:500]:
+		mt = lcs(traj,j)		
 		matching.append([mt,num])
 		#print cp
 		num = num + 1	#This counts the position of the neighbor
-	matching = sorted(matching, key = lambda matches:matching[0], reverse=True)
-	print matching
+	matching = sorted(matching, key = lambda x:x[0], reverse=True)
 		
 	elapsed_time = time.time() - start_time
 	
@@ -121,7 +120,7 @@ for traj in test_traj:
 		#Common subsequence plot
 		common_lats = []
 		common_lons = []
-		for i in maxFive[k][0][1]:
+		for i in matching[k][0][1]:
 			common_lons.append(i[1])
 			common_lats.append(i[2])
 		
@@ -161,8 +160,8 @@ for traj in test_traj:
 		</tr>
 		<tr>
 			<td></td>
-			<td>Matching Points:  """+str(matching[0][0])+"""</td>
-			<td>Matching Points:  """+str(matching[1][0])+"""</td>
+			<td>Matching Points:  """+str(matching[0][0][0])+"""</td>
+			<td>Matching Points:  """+str(matching[1][0][0])+"""</td>
 		</tr>
 		<tr>
 			<td><iframe src = "../Neighbor_"""+str(index)+str(matching[2][1])+""".html"></iframe></td>
@@ -180,9 +179,9 @@ for traj in test_traj:
 			<td>JP_ID: """+train_set['journeyPatternId'][matching[4][1]]+"""</td>
 		</tr>
 		<tr>
-			<td>Matching Points:  """+str(matching[2][0])+"""</td>
-			<td>Matching Points:  """+str(matching[3][0])+"""</td>
-			<td>Matching Points:  """+str(matching[4][0])+"""</td>
+			<td>Matching Points:  """+str(matching[2][0][0])+"""</td>
+			<td>Matching Points:  """+str(matching[3][0][0])+"""</td>
+			<td>Matching Points:  """+str(matching[4][0][0])+"""</td>
 		</tr>
 	</table>
 </body>
