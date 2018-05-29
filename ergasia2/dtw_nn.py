@@ -13,7 +13,7 @@ train_set = pd.read_csv('datasets/train_set.csv',
 						converters = {"Trajectory": literal_eval},
 						index_col='tripId')
 
-test_set = pd.read_csv('datasets/test_set_a1.csv', sep =';', converters = {"Trajectory": literal_eval})
+test_set = pd.read_csv('datasets/test_set_a1.csv', sep ="\t", converters = {"Trajectory": literal_eval})
 						
 def haversine(lon1,lat1,lon2,lat2):
 	

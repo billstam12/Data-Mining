@@ -13,7 +13,7 @@ train_set = pd.read_csv('datasets/train_set.csv',
 						converters = {"Trajectory": literal_eval},
 						index_col='tripId')
 
-test_set = pd.read_csv('datasets/test_set_a2.csv', sep =';', converters = {"Trajectory": literal_eval})
+test_set = pd.read_csv('datasets/test_set_a2.csv', sep ="\t", converters = {"Trajectory": literal_eval})
 						
 def haversine(lon1,lat1,lon2,lat2):
 	
@@ -42,18 +42,37 @@ def lcs(search , target):
 	for i in range(m+1):
 		for j in range(n+1):
 			x = haversine(search[i-1][1], search[i-1][2], target[j-1][1], target[j-1][2]) 
-            
-			if i == 0 or j == 0 :
+			if i == 0 or j == 0:
 				L[i][j] = 0
 			elif x <= 0.2:
 				L[i][j] = L[i-1][j-1]+1
 			else:
 				L[i][j] = max(L[i-1][j] , L[i][j-1])
-    
-	return L[m][n]
-
+	cp = common_path(L,target)
+	ls = [L[m][n], cp]
+	return ls
+	
+def common_path(L,target):
+    commonPath = []
+    i=len(L)-1
+    j=len(L[len(L)-1])-1
+    while(True):
+        if(j == 0 and i == 0): 
+            break;
+        if(j!=0 and L[i][j] == L[i][j-1]) :
+            j=j-1
+            continue
+        elif(i!=0 and L[i][j] == L[i-1][j]):
+            i=i-1
+            continue
+        else:
+            commonPath.insert(0, target[j-1])
+            i=i-1
+            j=j-1
+    return commonPath
+	
 train_traj = train_set['Trajectory']
-
+train_traj = np.array(train_traj)
 test_traj = test_set['Trajectory']
 # Here we iterate through each instance of the table and
 # for each of the elements in every row we remove the time element
@@ -79,14 +98,17 @@ for traj in test_traj:
 	
 	#Calculate dtw and create matching list
 	start_time = time.time()
-	for j in train_traj[:100]:
-		matching.append([lcs(traj,j),num])
-		num +=1	#This counts the position of the neighbor
-	matching = sorted(matching, reverse=True)
-	
+	for j in train_traj[:5000]:
+		mt = lcs(traj,j)
+		matching.append([mt,num])
+		#print cp
+		num = num + 1	#This counts the position of the neighbor
+	matching = sorted(matching, key = lambda matches:matching[0], reverse=True)
+	print matching
+		
 	elapsed_time = time.time() - start_time
 	
-	for k in range(0,5):
+	for k in range(5):
 		#print matching[k];
 		lats = []
 		lons = []
@@ -95,9 +117,17 @@ for traj in test_traj:
 		for l in train_traj[matching[k][1]]:
 			lons.append(l[1])
 			lats.append(l[2])
-			
+		
+		#Common subsequence plot
+		common_lats = []
+		common_lons = []
+		for i in maxFive[k][0][1]:
+			common_lons.append(i[1])
+			common_lats.append(i[2])
+		
 		gmap = gmplot.GoogleMapPlotter(lats[int(len(lats)/2)], lons[int(len(lons)/2)], 11)
 		gmap.plot(lats, lons, 'cornflowerblue', edge_width=5)
+		gmap.plot(common_lats, common_lons, 'red', edge_width=5)
 		gmap.draw("results2_2/Neighbor_"+str(index)+str(matching[k][1])+".html")
 	
 	fl = open('results2_2/final/final_'+str(index)+'.html','w')
