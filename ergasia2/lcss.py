@@ -10,8 +10,8 @@ import time
 AVG_EARTH_RADIUS = 6371 #km
 
 train_set = pd.read_csv('datasets/train_set.csv', 
-						converters = {"Trajectory": literal_eval},
-						index_col='tripId')
+						converters = {"Trajectory": literal_eval})
+						
 
 test_set = pd.read_csv('datasets/test_set_a2.csv', sep ="\t", converters = {"Trajectory": literal_eval})
 						
@@ -49,11 +49,11 @@ def lcs(search , target):
 			else:
 				L[i][j] = max(L[i-1][j] , L[i][j-1])
 	cp = common_path(L,target)
-	ls = [max(max(L)), cp]
+	ls = [L[m][n], cp]
 	return ls
 	
 def common_path(L,target):
-    commonPath = []
+    cp = []
     i=len(L)-1
     j=len(L[len(L)-1])-1
     while(True):
@@ -66,19 +66,20 @@ def common_path(L,target):
             i=i-1
             continue
         else:
-            commonPath.insert(0, target[j-1])
+            cp.insert(0, target[j-1])
             i=i-1
             j=j-1
-    return commonPath
+    return cp
 	
 train_traj = train_set['Trajectory']
 train_traj = np.array(train_traj)
 test_traj = test_set['Trajectory']
-test_traj = np.array(test_traj)
+
 # Here we iterate through each instance of the table and
 # for each of the elements in every row we remove the time element
 # thus we keep only the coordinates.
 
+start_of_run = time.time()
 index = 1
 for traj in test_traj:
 	matching = []
@@ -99,7 +100,7 @@ for traj in test_traj:
 	
 	#Calculate lcss and create matching list
 	start_time = time.time()
-	for j in train_traj[:100]:
+	for j in train_traj:
 		mt = lcs(traj,j)		
 		matching.append([mt,num])
 		#print cp
@@ -131,57 +132,59 @@ for traj in test_traj:
 		gmap.plot(common_lats, common_lons, 'red', edge_width=5)
 		gmap.draw("results2_2/Neighbor_"+str(matching[k][1])+".html")
 	
-	
+	print matching[0][0][0],matching[1][0][0],matching[2][0][0],matching[3][0][0],matching[4][0][0]
 	fl = open('results2_2/final/final_'+str(index)+'.html','w')
 	message = """
-<!DOCTYPE html>
-<html>
-	<body>
-		<table>
-			<tr>
-				<td><iframe src = "../Test_Route_"""+str(index)+""".html"></iframe></td>
-				<td><iframe src = "../Neighbor_"""+str(matching[0][1])+""".html"></iframe></td>
-				<td><iframe src = "../Neighbor_"""+str(matching[1][1])+""".html"></iframe></td>
-			</tr>
-			<tr>
-				<td>Test Trip """+str(index)+"""</td>
-				<td>Neighbor 1</td>
-				<td>Neighbor 2</td>
-			</tr>
-			<tr>
-				<td>Dt= """+str(elapsed_time)+"""sec</td>
-				<td>JP_ID: """+str(train_set['journeyPatternId'][matching[0][1]])+"""</td>
-				<td>JP_ID: """+str(train_set['journeyPatternId'][matching[1][1]])+"""</td>
-			</tr>
-			<tr>
-				<td></td>
-				<td>Matching Points:  """+str(matching[0][0][0])+"""</td>
-				<td>Matching Points:  """+str(matching[1][0][0])+"""</td>
-			</tr>
-			<tr>
-				<td><iframe src = "../Neighbor_"""+str(matching[2][1])+""".html"></iframe></td>
-				<td><iframe src = "../Neighbor_"""+str(matching[3][1])+""".html"></iframe></td>
-				<td><iframe src = "../Neighbor_"""+str(matching[4][1])+""".html"></iframe></td>
-			</tr>
-			<tr>
-				<td>Neighbor 3</td>
-				<td>Neighbor 4</td>
-				<td>Neighbor 5</td>
-			</tr>
-			<tr>
-				<td>JP_ID: """+str(train_set['journeyPatternId'][matching[2][1]])+"""</td>
-				<td>JP_ID: """+str(train_set['journeyPatternId'][matching[3][1]])+"""</td>
-				<td>JP_ID: """+str(train_set['journeyPatternId'][matching[4][1]])+"""</td>
-			</tr>
-			<tr>
-				<td>Matching Points:  """+str(matching[2][0][0])+"""</td>
-				<td>Matching Points:  """+str(matching[3][0][0])+"""</td>
-				<td>Matching Points:  """+str(matching[4][0][0])+"""</td>
-			</tr>
-		</table>
-	</body>
-</html>
-"""
+	<!DOCTYPE html>
+	<html>
+		<body>
+			<table>
+				<tr>
+					<td><iframe src = "../Test_Route_"""+str(index)+""".html"></iframe></td>
+					<td><iframe src = "../Neighbor_"""+str(matching[0][1])+""".html"></iframe></td>
+					<td><iframe src = "../Neighbor_"""+str(matching[1][1])+""".html"></iframe></td>
+				</tr>
+				<tr>
+					<td>Test Trip """+str(index)+"""</td>
+					<td>Neighbor 1</td>
+					<td>Neighbor 2</td>
+				</tr>
+				<tr>
+					<td>Dt= """+str(elapsed_time)+"""sec</td>
+					<td>JP_ID: """+str(train_set['journeyPatternId'][matching[0][1]])+"""</td>
+					<td>JP_ID: """+str(train_set['journeyPatternId'][matching[1][1]])+"""</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>Matching Points:  """+str(matching[0][0][0])+"""</td>
+					<td>Matching Points:  """+str(matching[1][0][0])+"""</td>
+				</tr>
+				<tr>
+					<td><iframe src = "../Neighbor_"""+str(matching[2][1])+""".html"></iframe></td>
+					<td><iframe src = "../Neighbor_"""+str(matching[3][1])+""".html"></iframe></td>
+					<td><iframe src = "../Neighbor_"""+str(matching[4][1])+""".html"></iframe></td>
+				</tr>
+				<tr>
+					<td>Neighbor 3</td>
+					<td>Neighbor 4</td>
+					<td>Neighbor 5</td>
+				</tr>
+				<tr>
+					<td>JP_ID: """+str(train_set['journeyPatternId'][matching[2][1]])+"""</td>
+					<td>JP_ID: """+str(train_set['journeyPatternId'][matching[3][1]])+"""</td>
+					<td>JP_ID: """+str(train_set['journeyPatternId'][matching[4][1]])+"""</td>
+				</tr>
+				<tr>
+					<td>Matching Points:  """+str(matching[2][0][0])+"""</td>
+					<td>Matching Points:  """+str(matching[3][0][0])+"""</td>
+					<td>Matching Points:  """+str(matching[4][0][0])+"""</td>
+				</tr>
+			</table>
+		</body>
+	</html>
+	"""
 	fl.write(message)
 	fl.close()
 	index+=1
+
+total_time = time.time() - start_of_run
