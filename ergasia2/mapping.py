@@ -43,23 +43,23 @@ for i in range(0,5):
 			lons_5.append(j[1])
 
 			
-gmap1 = gmplot.GoogleMapPlotter(53.383015, -6.237581, 10)			
+gmap1 = gmplot.GoogleMapPlotter(lats_1[0], lons_1[0], 12)			
 gmap1.plot(lats_1,lons_1,'cornflowerblue',edge_width=10)
 gmap1.draw("maps/map1.html")
 
-gmap2 = gmplot.GoogleMapPlotter(53.383015, -6.237581, 10)			
+gmap2 = gmplot.GoogleMapPlotter(lats_2[0], lons_2[0], 12)			
 gmap2.plot(lats_2,lons_2,'cornflowerblue',edge_width=10)
 gmap2.draw("maps/map2.html")
 
-gmap3 = gmplot.GoogleMapPlotter(53.383015, -6.237581, 10)			
+gmap3 = gmplot.GoogleMapPlotter(lats_3[0], lons_3[0], 12)			
 gmap3.plot(lats_3,lons_3,'cornflowerblue',edge_width=10)
 gmap3.draw("maps/map3.html")
 
-gmap4 = gmplot.GoogleMapPlotter(53.383015, -6.237581, 10)		
+gmap4 = gmplot.GoogleMapPlotter(lats_4[0], lons_4[0], 12)		
 gmap4.plot(lats_4,lons_4,'cornflowerblue',edge_width=10)
 gmap4.draw("maps/map4.html")
 
-gmap5 =  gmplot.GoogleMapPlotter(53.383015, -6.237581, 10)		
+gmap5 =  gmplot.GoogleMapPlotter(lats_5[0], lons_5[0], 12)		
 gmap5.plot(lats_5,lons_5,'cornflowerblue',edge_width=10)
 gmap5.draw("maps/map5.html")
 

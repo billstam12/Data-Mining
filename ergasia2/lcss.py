@@ -74,6 +74,7 @@ def common_path(L,target):
 train_traj = train_set['Trajectory']
 train_traj = np.array(train_traj)
 test_traj = test_set['Trajectory']
+test_traj = np.array(test_traj)
 # Here we iterate through each instance of the table and
 # for each of the elements in every row we remove the time element
 # thus we keep only the coordinates.
@@ -98,13 +99,14 @@ for traj in test_traj:
 	
 	#Calculate lcss and create matching list
 	start_time = time.time()
-	for j in train_traj[:500]:
+	for j in train_traj[:100]:
 		mt = lcs(traj,j)		
 		matching.append([mt,num])
 		#print cp
 		num = num + 1	#This counts the position of the neighbor
 	matching = sorted(matching, key = lambda x:x[0], reverse=True)
-		
+
+	# MATCHING = [ #points, {shortest_path}, index]
 	elapsed_time = time.time() - start_time
 	
 	for k in range(5):
@@ -127,65 +129,59 @@ for traj in test_traj:
 		gmap = gmplot.GoogleMapPlotter(lats[int(len(lats)/2)], lons[int(len(lons)/2)], 11)
 		gmap.plot(lats, lons, 'cornflowerblue', edge_width=5)
 		gmap.plot(common_lats, common_lons, 'red', edge_width=5)
-		gmap.draw("results2_2/Neighbor_"+str(index)+str(matching[k][1])+".html")
+		gmap.draw("results2_2/Neighbor_"+str(matching[k][1])+".html")
+	
 	
 	fl = open('results2_2/final/final_'+str(index)+'.html','w')
 	message = """
 <!DOCTYPE html>
 <html>
 	<body>
-	<style>
-		.center {
-			display: block;
-			margin-left: auto;
-			margin-right: auto;
-			width: 50%;
-		}
-	</style>
-	<table>
-		<tr>
-			<td><iframe src = "../Test_Route_"""+str(index)+""".html"></iframe></td>
-			<td><iframe src = "../Neighbor_"""+str(index)+str(matching[0][1])+""".html"></iframe></td>
-			<td><iframe src = "../Neighbor_"""+str(index)+str(matching[1][1])+""".html"></iframe></td>
-		</tr>
-		<tr>
-			<td>Test Trip """+str(index)+"""</td>
-			<td>Neighbor 1</td>
-			<td>Neighbor 2</td>
-		</tr>
-		<tr>
-			<td>Dt= """+str(elapsed_time)+"""sec</td>
-			<td>JP_ID: """+train_set['journeyPatternId'][matching[0][1]]+"""</td>
-			<td>JP_ID: """+train_set['journeyPatternId'][matching[1][1]]+"""</td>
-		</tr>
-		<tr>
-			<td></td>
-			<td>Matching Points:  """+str(matching[0][0][0])+"""</td>
-			<td>Matching Points:  """+str(matching[1][0][0])+"""</td>
-		</tr>
-		<tr>
-			<td><iframe src = "../Neighbor_"""+str(index)+str(matching[2][1])+""".html"></iframe></td>
-			<td><iframe src = "../Neighbor_"""+str(index)+str(matching[3][1])+""".html"></iframe></td>
-			<td><iframe src = "../Neighbor_"""+str(index)+str(matching[4][1])+""".html"></iframe></td>
-		</tr>
-		<tr>
-			<td>Neighbor 3</td>
-			<td>Neighbor 4</td>
-			<td>Neighbor 5</td>
-		</tr>
-		<tr>
-			<td>JP_ID: """+train_set['journeyPatternId'][matching[2][1]]+"""</td>
-			<td>JP_ID: """+train_set['journeyPatternId'][matching[3][1]]+"""</td>
-			<td>JP_ID: """+train_set['journeyPatternId'][matching[4][1]]+"""</td>
-		</tr>
-		<tr>
-			<td>Matching Points:  """+str(matching[2][0][0])+"""</td>
-			<td>Matching Points:  """+str(matching[3][0][0])+"""</td>
-			<td>Matching Points:  """+str(matching[4][0][0])+"""</td>
-		</tr>
-	</table>
-</body>
-</html>"""
+		<table>
+			<tr>
+				<td><iframe src = "../Test_Route_"""+str(index)+""".html"></iframe></td>
+				<td><iframe src = "../Neighbor_"""+str(matching[0][1])+""".html"></iframe></td>
+				<td><iframe src = "../Neighbor_"""+str(matching[1][1])+""".html"></iframe></td>
+			</tr>
+			<tr>
+				<td>Test Trip """+str(index)+"""</td>
+				<td>Neighbor 1</td>
+				<td>Neighbor 2</td>
+			</tr>
+			<tr>
+				<td>Dt= """+str(elapsed_time)+"""sec</td>
+				<td>JP_ID: """+str(train_set['journeyPatternId'][matching[0][1]])+"""</td>
+				<td>JP_ID: """+str(train_set['journeyPatternId'][matching[1][1]])+"""</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>Matching Points:  """+str(matching[0][0][0])+"""</td>
+				<td>Matching Points:  """+str(matching[1][0][0])+"""</td>
+			</tr>
+			<tr>
+				<td><iframe src = "../Neighbor_"""+str(matching[2][1])+""".html"></iframe></td>
+				<td><iframe src = "../Neighbor_"""+str(matching[3][1])+""".html"></iframe></td>
+				<td><iframe src = "../Neighbor_"""+str(matching[4][1])+""".html"></iframe></td>
+			</tr>
+			<tr>
+				<td>Neighbor 3</td>
+				<td>Neighbor 4</td>
+				<td>Neighbor 5</td>
+			</tr>
+			<tr>
+				<td>JP_ID: """+str(train_set['journeyPatternId'][matching[2][1]])+"""</td>
+				<td>JP_ID: """+str(train_set['journeyPatternId'][matching[3][1]])+"""</td>
+				<td>JP_ID: """+str(train_set['journeyPatternId'][matching[4][1]])+"""</td>
+			</tr>
+			<tr>
+				<td>Matching Points:  """+str(matching[2][0][0])+"""</td>
+				<td>Matching Points:  """+str(matching[3][0][0])+"""</td>
+				<td>Matching Points:  """+str(matching[4][0][0])+"""</td>
+			</tr>
+		</table>
+	</body>
+</html>
+"""
 	fl.write(message)
 	fl.close()
 	index+=1

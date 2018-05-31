@@ -5,8 +5,9 @@ from sklearn import metrics
 from KNN import kNearestNeighbor
 from ast import literal_eval
 
+
 train_set = pd.read_csv('datasets/train_set.csv', converters={"Trajectory": literal_eval})
-train_set = train_set[:1000]
+train_set = train_set[:int(len(train_set["Trajectory"])*0.05)] #get 5% of train set
 
 
 X = []

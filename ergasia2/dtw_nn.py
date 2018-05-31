@@ -1,11 +1,12 @@
 import pandas as pd 
 from ast import literal_eval
 from collections import Counter
-import dtw
 import numpy as np 
 import gmplot
 from math import radians, cos, sin, asin, sqrt
 import time 
+from dtw import dtw
+
 
 AVG_EARTH_RADIUS = 6371 #km
 
@@ -30,24 +31,6 @@ def haversine(lon1,lat1,lon2,lat2):
 	
 	return h
 
-def DTW(search, target):
-	n = len(search)
-	m = len(target)
-	dtw = np.zeros((n,m))
-	
-	for i in range(1,n):
-		dtw[i][0] = float("inf")
-	for i in range(1,m):
-		dtw[0][i] = float("inf")
-	dtw[0][0] = 0
-	
-	
-	for i in range(1, n):
-		for j in range(1, m):
-			cost = haversine(search[i][1], search[i][2], target[j][1], target[j][2])
-			dtw [i][j] = cost + min(dtw[i - 1][j], dtw[i][j - 1], dtw[i - 1][j - 1])
-			
-	return dtw[n-1][m-1]
 	
 
 train_traj = train_set['Trajectory']
@@ -77,8 +60,10 @@ for traj in test_traj:
 	
 	#Calculate dtw and create distances list
 	start_time = time.time()
-	for j in train_traj[:100]:
-		distances.append([DTW(traj,j),num])
+	for j in train_traj:
+		j = np.array(j)
+		distances.append((dtw(traj, j, dist = lambda search, target: haversine
+                (search[1], search[2], target[1], target[2]))[0],num))
 		num +=1	#This counts the position of the neighbor
 	distances = sorted(distances)
 	
@@ -90,7 +75,7 @@ for traj in test_traj:
 		lons = []
 		
 		#Calculate coordinates of nearest neighbors and plot them too
-		for l in train_traj[distances[k][1]]:
+		for l in train_set["Trajectory"][distances[k][1]]:
 			lons.append(l[1])
 			lats.append(l[2])
 			
@@ -103,14 +88,6 @@ for traj in test_traj:
 <!DOCTYPE html>
 <html>
 	<body>
-	<style>
-		.center {
-			display: block;
-			margin-left: auto;
-			margin-right: auto;
-			width: 50%;
-		}
-	</style>
 	<table>
 		<tr>
 			<td><iframe src = "../Test_Route_"""+str(index)+""".html"></iframe></td>
@@ -124,8 +101,8 @@ for traj in test_traj:
 		</tr>
 		<tr>
 			<td>Dt= """+str(elapsed_time)+"""sec</td>
-			<td>JP_ID: """+train_set['journeyPatternId'][distances[0][1]]+"""</td>
-			<td>JP_ID: """+train_set['journeyPatternId'][distances[1][1]]+"""</td>
+			<td>JP_ID: """+str(train_set['journeyPatternId'][distances[0][1]])+"""</td>
+			<td>JP_ID: """+str(train_set['journeyPatternId'][distances[1][1]])+"""</td>
 		</tr>
 		<tr>
 			<td></td>
@@ -143,9 +120,9 @@ for traj in test_traj:
 			<td>Neighbor 5</td>
 		</tr>
 		<tr>
-			<td>JP_ID: """+train_set['journeyPatternId'][distances[2][1]]+"""</td>
-			<td>JP_ID: """+train_set['journeyPatternId'][distances[3][1]]+"""</td>
-			<td>JP_ID: """+train_set['journeyPatternId'][distances[4][1]]+"""</td>
+			<td>JP_ID: """+str(train_set['journeyPatternId'][distances[2][1]])+"""</td>
+			<td>JP_ID: """+str(train_set['journeyPatternId'][distances[3][1]])+"""</td>
+			<td>JP_ID: """+str(train_set['journeyPatternId'][distances[4][1]])+"""</td>
 		</tr>
 		<tr>
 			<td>DTW:  """+str(distances[2][0])+"""</td>
