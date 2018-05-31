@@ -51,7 +51,8 @@ def lcs(search , target):
 	cp = common_path(L,target)
 	ls = [L[m][n], cp]
 	return ls
-	
+
+#To find a common path, traverse the L matrix but in reverse this time.
 def common_path(L,target):
     cp = []
     i=len(L)-1

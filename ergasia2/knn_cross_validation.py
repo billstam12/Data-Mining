@@ -4,10 +4,12 @@ from sklearn.model_selection import StratifiedKFold
 from sklearn import metrics
 from KNN import kNearestNeighbor
 from ast import literal_eval
-
+import time
 
 train_set = pd.read_csv('datasets/train_set.csv', converters={"Trajectory": literal_eval})
-train_set = train_set[:int(len(train_set["Trajectory"])*0.05)] #get 5% of train set
+N = len(train_set)
+T = int(N*0.05)
+train_set = train_set[:T] #get 5% of train set
 
 
 X = []
@@ -25,6 +27,7 @@ splits = StratifiedKFold(n_splits = 10)
 splits.get_n_splits(X,y)
 accuracy = 0
 k = 5
+start = time.time()
 for train, test in splits.split(X,y):
 	X_train, X_test = X[train], X[test]
 	y_train, y_test = y[train], y[test]
@@ -35,4 +38,6 @@ for train, test in splits.split(X,y):
 	
 	accuracy += metrics.accuracy_score(y_test, predictions)
 
+elapsed_time = time.time() - start
 print("Accuracy = ", accuracy/10)
+print("Time = ", elapsed_time)
